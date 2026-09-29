@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic BFS algorithm
 */
 
-//I AM NOT DONE
 use std::collections::VecDeque;
 
 // Define a graph
@@ -27,12 +26,61 @@ impl Graph {
 
     // Perform a breadth-first search on the graph, return the order of visited nodes
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
-        
-		//TODO
+        let len = self.adj.len();
+        if len == 0 {
+            return Vec::new();
+        }
 
+        let mut seen = vec![false; len];
+        let mut queue = VecDeque::new();
         let mut visit_order = vec![];
+
+        seen[start] = true;
+        queue.push_back(start);
+
+        while let Some(node) = queue.pop_front() {
+            visit_order.push(node);
+
+            for &next in &self.adj[node] {
+                if !seen[next] {
+                    seen[next] = true;
+                    queue.push_back(next);
+                }
+            }
+        }
+
         visit_order
     }
+
+    // fn bfs_with_return(&self, start: usize) -> Vec<usize> {
+    //     let mut seen = HashSet::new();
+    //     let mut visit_order = vec![];
+    //     visit_order.push(start);
+    //     seen.insert(start);
+
+    //     let result = self.bfs_inner(start, &mut seen);
+    //     visit_order.extend_from_slice(&result);
+
+    //     visit_order
+    // }
+
+    // fn bfs_inner(&self, start: usize, seen: &mut HashSet<usize>) -> Vec<usize> {
+    //     let mut visit_order = vec![];
+    //     let mut nodes = vec![];
+    //     for &n in &self.adj[start] {
+    //         if seen.insert(n) {
+    //             nodes.push(n);
+    //         }
+    //     }
+    //     visit_order.extend_from_slice(&nodes);
+
+    //     for node in nodes {
+    //         let r = self.bfs_inner(node, seen);
+    //         visit_order.extend_from_slice(&r);
+    //     }
+
+    //     visit_order
+    // }
 }
 
 

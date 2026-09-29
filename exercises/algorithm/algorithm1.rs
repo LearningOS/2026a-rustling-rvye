@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,14 +68,50 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+    where T: Ord + Clone
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut root = LinkedList::new();
+
+        let mut a = list_a.start;
+        let mut b = list_b.start;
+        while a.is_some() || b.is_some() {
+            match (a, b) {
+                (Some(na), Some(nb)) => {
+                    let pa = unsafe { na.as_ref() };
+                    let pb = unsafe { nb.as_ref() };
+                    let va = pa.val.clone();
+                    let vb = pb.val.clone();
+                    if va < vb {
+                        root.add(va);
+                        a = pa.next;
+                    } else if va > vb {
+                        root.add(vb);
+                        b = pb.next;
+                    } else {
+                        root.add(va);
+                        root.add(vb);
+                        a = pa.next;
+                        b = pb.next;
+                    }
+                },
+                (None, Some(nb)) => {
+                    let pb = unsafe { nb.as_ref() };
+                    let vb = pb.val.clone();
+                    root.add(vb);
+                    b = pb.next;
+                },
+                (Some(na), None) => {
+                    let pa = unsafe { na.as_ref() };
+                    let va = pa.val.clone();
+                    root.add(va) ;
+                    a = pa.next;
+                },
+                _ => break,
+            }
         }
+
+        root
 	}
 }
 
